@@ -1,345 +1,270 @@
- (function($) {
-   "use strict"; // Start of use strict
 
-   /* ---------------------------------------------
-    Scripts initialization
-    --------------------------------------------- */
+$(document).ready(function(){
+	"use strict";
 
-   $(window).load(function() {
-
-     /******** Page loader *******/
-     $(".page-loader div").fadeOut();
-     $(".page-loader").delay(200).fadeOut("slow");
+	var window_width 	 = $(window).width(),
+	window_height 		 = window.innerHeight,
+	header_height 		 = $(".default-header").height(),
+	header_height_static = $(".site-header.static").outerHeight(),
+	fitscreen 			 = window_height - header_height;
 
 
-     /******** fractionSlider *******/
+	$(".fullscreen").css("height", window_height)
+	$(".fitscreen").css("height", fitscreen);
 
-     $('.fr-slider').fractionSlider({
-       'fullWidth': true,
-       'slideTransition': 'fade',
-       'slideTransitionSpeed': 650,
-       'slideEndAnimation': false,
-       'controls': false,
-       'pager': true,
-       'speedOut': 2600,
-       'timeout': 6000,
-       'responsive': true,
-       'increase': true,
-       'dimensions': '1170 , 600',
-     });
+     if(document.getElementById("default-select")){
+          $('select').niceSelect();
+    };
 
-     var viewportWidth = $(window).width();
-     var colWidth = $(".fraction-slider").width();
-     var viewportHeight = $(window).height();
-     var divideval = 2;
-     var marginslidebg = (viewportWidth - colWidth) / divideval + 2;
+    $('.img-pop-up').magnificPopup({
+        type: 'image',
+        gallery:{
+        enabled:true
+        }
+    });
 
-     $(".slide-bg").css({
-       "width": viewportWidth,
-       "max-width": viewportWidth,
-       "margin-left": "-" + marginslidebg + "px",
-     });
+    $('.single-gallery').magnificPopup({
+        type: 'image',
+        gallery:{
+        enabled:true
+        }
+    });
 
-     $(window).resize(function() {
-       /******** fractionSlider bg image resize *******/
-       $(".slide-bg").css({
-         "width": viewportWidth,
-         "max-width": viewportWidth,
-         "margin-left": "-" + marginslidebg + "px",
-       });
-
-     });
-
-     
-     /******** Isotope Portfolio *******/
-     // Isotope Portfolio
-     var $container = jQuery('.portfolio');
-     $container.isotope({
-       filter: '*',
-       animationOptions: {
-         duration: 750,
-         easing: 'linear',
-         queue: false,
-       }
-     });
-     jQuery('.port-filter li a').click(function() {
-       jQuery('.port-filter li').removeClass('active');
-       jQuery(this).parent().addClass('active');
-
-       var selector = jQuery(this).attr('data-filter');
-       $container.isotope({
-         filter: selector,
-         animationOptions: {
-           duration: 750,
-           easing: 'linear',
-           queue: false
-         },
-       });
-       return false;
-     });
-     $container.isotope('layout');
-
-     /******** append Portfolio item on click *******/
-     $('.append-button').on('click', function() {
-       // create new item elements 
-       var $item_height = $('.gallery-portfolio .project-item').height();
-       var $items = $('<div class="project-item  illustration" style="height:' + $item_height + 'px;"><div class="project-image"><img src="../images/gallery/i3.jpg" alt=""><div class="overlay"><div class="content-wrap"><div class="overlay-content"><h3><a href="../single-portfolio.html">WIDE GALLERY</a></h3> <ul class="entry-cat"> <li><a href="#">Motion </a></li> <li><a href="#">Photography</a></li></ul></div></div></div></div></div> <div class="project-item  illustration"><div class="project-image"><img src="../images/gallery/i8.jpg" alt=""><div class="overlay"><div class="content-wrap"><div class="overlay-content"><h3><a href="../single-portfolio.html">WIDE GALLERY</a></h3> <ul class="entry-cat"> <li><a href="#">Motion </a></li> <li><a href="#">Photography</a></li></ul></div></div></div></div></div> <div class="project-item  illustration"><div class="project-image"><img src="../images/gallery/i9.jpg" alt=""><div class="overlay"><div class="content-wrap"><div class="overlay-content"><h3><a href="../single-portfolio.html">WIDE GALLERY</a></h3> <ul class="entry-cat"> <li><a href="#">Motion </a></li> <li><a href="#">Photography</a></li></ul></div></div></div></div></div>');
-
-       // append items to grid
-       $container.append($items)
-         // add and lay out newly appended items
-         .isotope('appended', $items);
-
-       $(".append-button").remove(".append-button");
-       $container.isotope('layout');
-
-     });
-
-   });
+    $('.recent-project').magnificPopup({
+        type: 'image',
+        gallery:{
+        enabled:true
+        }
+    });
 
 
-   $(document).ready(function() {
+    $('.play-btn').magnificPopup({
+        type: 'iframe',
+        mainClass: 'mfp-fade',
+        removalDelay: 160,
+        preloader: false,
+        fixedContentPos: false
+    });
 
 
-     /******** Nav menu *******/
+  // Initiate superfish on nav menu
+  $('.nav-menu').superfish({
+    animation: {
+      opacity: 'show'
+    },
+    speed: 400
+  });
 
-     $('ul.sf-menu').superfish({
-       animation: {
-         height: 'show'
-       }, // slide-down effect without fade-in
-       delay: 100 // 1.2 second delay on mouseout
-     });
+  // Mobile Navigation
+  if ($('#nav-menu-container').length) {
+    var $mobile_nav = $('#nav-menu-container').clone().prop({
+      id: 'mobile-nav'
+    });
+    $mobile_nav.find('> ul').attr({
+      'class': '',
+      'id': ''
+    });
+    $('body').append($mobile_nav);
+    $('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>');
+    $('body').append('<div id="mobile-body-overly"></div>');
+    $('#mobile-nav').find('.menu-has-children').prepend('<i class="lnr lnr-chevron-down"></i>');
+
+    $(document).on('click', '.menu-has-children i', function(e) {
+      $(this).next().toggleClass('menu-item-active');
+      $(this).nextAll('ul').eq(0).slideToggle();
+      $(this).toggleClass("lnr-chevron-up lnr-chevron-down");
+    });
+
+    $(document).on('click', '#mobile-nav-toggle', function(e) {
+      $('body').toggleClass('mobile-nav-active');
+      $('#mobile-nav-toggle i').toggleClass('lnr-cross lnr-menu');
+      $('#mobile-body-overly').toggle();
+    });
+
+    $(document).click(function(e) {
+      var container = $("#mobile-nav, #mobile-nav-toggle");
+      if (!container.is(e.target) && container.has(e.target).length === 0) {
+        if ($('body').hasClass('mobile-nav-active')) {
+          $('body').removeClass('mobile-nav-active');
+          $('#mobile-nav-toggle i').toggleClass('lnr-cross lnr-menu');
+          $('#mobile-body-overly').fadeOut();
+        }
+      }
+    });
+  } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
+    $("#mobile-nav, #mobile-nav-toggle").hide();
+  }
+
+  // Smooth scroll for the menu and links with .scrollto classes
+  $('.nav-menu a, #mobile-nav a, .scrollto').on('click', function() {
+    if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+      var target = $(this.hash);
+      if (target.length) {
+        var top_space = 0;
+
+        if ($('#header').length) {
+          top_space = $('#header').outerHeight();
+
+          if( ! $('#header').hasClass('header-fixed') ) {
+            top_space = top_space;
+          }
+        }
+
+        $('html, body').animate({
+          scrollTop: target.offset().top - top_space
+        }, 1500, 'easeInOutExpo');
+
+        if ($(this).parents('.nav-menu').length) {
+          $('.nav-menu .menu-active').removeClass('menu-active');
+          $(this).closest('li').addClass('menu-active');
+        }
+
+        if ($('body').hasClass('mobile-nav-active')) {
+          $('body').removeClass('mobile-nav-active');
+          $('#mobile-nav-toggle i').toggleClass('lnr-times lnr-bars');
+          $('#mobile-body-overly').fadeOut();
+        }
+        return false;
+      }
+    }
+  });
 
 
-     /******** Header two menu button *******/
+    $(document).ready(function() {
 
-     $("#mobnav-btn").click(function() {
-       $(".sf-menu").slideToggle("slow");
-     });
+    $('html, body').hide();
 
-     $('.mobnav-subarrow').click(
+        if (window.location.hash) {
 
-       function() {
-         $(this).siblings(".sub-menu").toggleClass("sub-menu-open");
-       });
+        setTimeout(function() {
 
-     $("#search-label").click(function() {
-       $(".search-bar").slideToggle("slow");
-     });
+        $('html, body').scrollTop(0).show();
 
-     $('.nav-button, .overlay-content-wrap').on('click', function() {
-       $('.nav-button').toggleClass("active");
-       $('.menu-content').fadeToggle();
-       $('.overlay-content-wrap').toggleClass("overlay-active");
-       $('body').toggleClass("overflow-hidden-header-three");
+        $('html, body').animate({
 
-       var height = $(window).height();
-       $(".menu-content-wrap").css('height', height);
+        scrollTop: $(window.location.hash).offset().top-100
 
-     });
+        }, 1000)
 
-     /******** Header on scroll *******/
+        }, 0);
 
-     // Hide Header on on scroll down
-     var didScroll;
-     var lastScrollTop = 0;
-     var delta = 5;
-     var navbarHeight = $('.header-inner').outerHeight();
+        }
 
-     $(window).scroll(function(event) {
-       didScroll = true;
-     });
+        else {
 
-     setInterval(function() {
-       if (didScroll) {
-         hasScrolled();
-         didScroll = false;
-       }
-     }, 250);
+        $('html, body').show();
 
-     function hasScrolled() {
-       var st = $(window).scrollTop();
+        }
+
+    });
+  
+
+  // Header scroll class
+  $(window).scroll(function() {
+    if ($(this).scrollTop() > 100) {
+      $('#header').addClass('header-scrolled');
+    } else {
+      $('#header').removeClass('header-scrolled');
+    }
+  })
+
+
+    $('.active-about-carusel').owlCarousel({
+        items:1,
+        loop:true,
+        margin:30,
+        dots: true
+    });
+
+    $('.active-exibition-carusel').owlCarousel({
+        items:3,
+        margin:30,
+        autoplay:true,
+        loop:true,
+        dots: true,       
+            responsive: {
+            0: {
+                items: 1
+            },
+            480: {
+                items: 1,
+            },
+            768: {
+                items: 2,
+            },
+            900: {
+                items: 3,
+            }
+
+        }
+    });
+
+
+  //  Gallery 
+
+
+    var parameters = {
+          gridContainer: '#grid-container',
+          gridItems: '.grid-item',
+          gutter: 15,
+          enableImagesLoaded: true
+        };
+        var grid = new justifiedGrid(parameters);
+    $('body').imagesLoaded( function() {
+       grid.initGrid();
+    });
        
-       var conterner_width = $('.inner-conterner').width();
-       // Make sure they scroll more than delta
-       if (Math.abs(lastScrollTop - st) <= delta)
-         return;
-
-       // If they scrolled down and are past the navbar, add class .nav-up.
-       // This is necessary so you never see what is "behind" the navbar.
-       if (st > lastScrollTop && st > navbarHeight) {
-         // Scroll Down
-         $('.header-inner').removeClass('header-scroll-fixed').addClass('header-scroll-up');
-       } else {
-         // Scroll Up 
-         if (st + $(window).height() < $(document).height()) {
-
-           $('.header-inner').removeClass('nav-up').addClass('header-scroll-fixed').css({
-             "width": conterner_width,
-           });
-
-         }
-       }
-
-       if (st < 50) {
-         $('.header-inner').removeClass('header-scroll-fixed').removeClass('header-scroll-up');
-       }
-
-       lastScrollTop = st;
-     }
 
 
+    //  Start Google map 
 
-     /******** OWL Slider *******/
+            // When the window has finished loading create our google map below
 
-     $("#owl-slide").owlCarousel({
-       autoPlay: 3000,
-       stopOnHover: true,
-       navigation: false,
-       paginationSpeed: 1000,
-       goToFirstSpeed: 2000,
-       singleItem: true,
-       autoHeight: true,
-     });
+            if(document.getElementById("map")){
+            
+            google.maps.event.addDomListener(window, 'load', init);
+        
+            function init() {
+                // Basic options for a simple Google Map
+                // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+                var mapOptions = {
+                    // How zoomed in you want the map to start at (always required)
+                    zoom: 11,
 
-     //owl slider
-     var owl = $("#owl-single-port");
-     owl.owlCarousel({
-       navigation: false, // Show next and prev buttons
-       slideSpeed: 1000,
-       autoPlay: 100000000,
-       paginationSpeed: 2000,
-       singleItem: true,
-       pagination: false,
-     });
+                    // The latitude and longitude to center the map (always required)
+                    center: new google.maps.LatLng(40.6700, -73.9400), // New York
 
-     // Custom Navigation Events
-     $(".next").click(function() {
-       owl.trigger('owl.next');
-     })
-     $(".prev").click(function() {
-       owl.trigger('owl.prev');
-     })
+                    // How you would like to style the map. 
+                    // This is where you would paste any style found on Snazzy Maps.
+                    styles: [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}]
+                };
 
-     function SetResizeContent() {
-       var minheight = $(window).height();
-       $(".full-screen").css({'min-height': minheight, 'height': minheight});
-     }
-     SetResizeContent();
+                // Get the HTML DOM element that will contain your map 
+                // We are using a div with id="map" seen below in the <body>
+                var mapElement = document.getElementById('map');
 
-     // owl slider for client slide show
-     var owl = $("#client-list-slide");
-     owl.owlCarousel({
-       items: 5, //10 items above 1000px browser width
-       itemsDesktop: [1000, 5], //5 items between 1000px and 901px
-       itemsDesktopSmall: [900, 3], // betweem 900px and 601px
-       itemsTablet: [600, 2], //2 items between 600 and 0
-       pagination: false,
-       itemsMobile: true // itemsMobile disabled - inherit from itemsTablet option
-     });
+                // Create the Google Map using our element and options defined above
+                var map = new google.maps.Map(mapElement, mapOptions);
 
-     // Custom Navigation Events
-     $(".next").click(function() {
-       owl.trigger('owl.next');
-     })
-     $(".prev").click(function() {
-       owl.trigger('owl.prev');
-     })
+                // Let's also add a marker while we're at it
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(40.6700, -73.9400),
+                    map: map,
+                    title: 'Snazzy!'
+                });
+            }
+    }
 
 
-     /******** Flickr feed *******/
-
-     $('#cbox').jflickrfeed({
-       limit: 6,
-       qstrings: {
-         id: '23588458@N00'
-       },
-       itemTemplate: '<li>' +
-         '<a href="{{image_b}}" title="{{title}}">' +
-         '<img src="{{image_q}}" alt="{{title}}" />' +
-         '</a>' +
-         '</li>'
-     });
-
-
-     /********  FitVids.js *******/
-
-     // Target your .container, .wrapper, .post, etc.
-     $(".fit").fitVids();
-
-
-     /********  jquery-ui slider for price filter  *******/
-     $("#slider-range").slider({
-       range: true,
-       min: 0,
-       max: 9000,
-       values: [1240, 6000],
-       slide: function(event, ui) {
-         $("#amount").val("£" + ui.values[0] + " - £" + ui.values[1]);
-       }
-     });
-     $("#amount").val("£" + $("#slider-range").slider("values", 0) +
-       " - £" + $("#slider-range").slider("values", 1));
-
-     /********  MAGNIFIC POPUP INIT *******/
-
-     $('.popup-gallery').magnificPopup({
-       delegate: 'a',
-       type: 'image',
-       tLoading: 'Loading image #%curr%...',
-       mainClass: 'mfp-with-fade mfp-img-mobile',
-       gallery: {
-         enabled: true,
-         navigateByImgClick: true,
-         preload: [0, 1] // Will preload 0 - before current, and 1 after the current image
-       },
-       image: {
-         tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
-         titleSrc: function(item) {
-           return item.el.attr('title') + '<small>by Marsel Van Oosten</small>';
-         }
-       }
-     });
-
-     // For video popup (PLAY VIDEO TRIGGER)
-     if ($('.video-play-trigger').length) {
-       $('.video-play-trigger').magnificPopup({
-         disableOn: 700,
-         type: 'iframe',
-         mainClass: 'mfp-with-fade',
-         removalDelay: 160,
-         preloader: false,
-         fixedContentPos: false
-       });
-     };
+        $(document).ready(function() {
+            $('#mc_embed_signup').find('form').ajaxChimp();
+        });      
 
 
 
-   });
 
 
 
-   $(window).resize(function() {
-
-     /******** Header size *******/
-     var conterner_width = $('.inner-conterner').width();
-     $('.header-inner').css({
-       "width": conterner_width,
-     });
-
-   });
 
 
-
-   /********  wow.js *******/
-   var wow = new WOW({
-     boxClass: 'wow', // animated element css class (default is wow)
-     animateClass: 'animated', // animation css class (default is animated)
-     offset: 50, // distance to the element when triggering the animation (default is 0) 
-     mobile: false
-   });
-   wow.init();
-
-
-
- })(jQuery)
+ });
